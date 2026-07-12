@@ -210,8 +210,5 @@ double parcala(char ifade[]) {
 
 int main()
 {
-    char ifade[] = "25-(32*5+1)%3"; // x yerine * yazdık
-    double sonuc = parcala(ifade);
-    printf("Sonuc: %lf\n", sonuc);
     return 0;
 }
