@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hesap Mkinesi</title>
+    <style>
+        :root {
+            /* Arka Planlar */
+            --calc-bg: #0d1117;
+            --display-bg: #000000;
+
+            /* Metinler (Neon Yeşil) */
+            --text-primary: #39ff14;
+
+            /* Standart Butonlar */
+            --btn-bg: #161b22;
+            --btn-hover: #21262d;
+
+            /* Operatör Butonları */
+            --btn-operator-bg: #21262d;
+            --btn-operator-text: #f0883e;
+            /* Neon Turuncu */
+            --btn-operator-hover: #30363d;
+
+            /* Aksiyon Butonları (AC, =, C) */
+            --btn-accent-bg: #238636;
+            /* Koyu Yeşil */
+            --btn-accent-text: #ffffff;
+            --btn-accent-hover: #2ea043;
+
+            /* --- BORDER (ÇERÇEVE) RENKLERİ --- */
+
+            /* Kasa ve Ekran Çerçeveleri */
+            --calc-border: #30363d;
+            /* Hesap makinesi dış kasası için mat gri */
+            --display-border: #39ff14;
+            /* Ekranın etrafına vurgulu neon yeşil çerçeve */
+
+            /* Buton Çerçeveleri */
+            --btn-border: #30363d;
+            /* Standart buton çerçevesi */
+            --btn-operator-border: #f0883e;
+            /* Operatör butonlarına uyumlu turuncu çerçeve */
+            --btn-accent-border: #2ea043;
+            /* Aksiyon butonlarına uyumlu yeşil çerçeve */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: monospace;
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--display-bg);
+        }
+
+        .makine {
+            perspective: 100;
+            z-index: 10;
+            width: 30%;
+            height: 70vh;
+            display: flex;
+            background-color: var(--calc-bg);
+            flex-direction: column;
+            padding: 20px;
+            justify-content: space-between;
+            border: 3px solid var(--calc-border);
+            border-radius: 10px;
+            box-shadow: 1px 1px 25px rgba(126, 126, 235, 0.645);
+        }
+
+        .islem_kısmı {
+            width: 100%;
+            height: 30%;
+            display: flex;
+            flex-direction: column;
+            background-color: #0d1117;
+            border: 1px solid var(--calc-border);
+            border-radius: 10px;
+            
+        }
+
+        .yazilacak_islem,
+        .sonuc {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 10px;
+            color: var(--text-primary);
+            text-shadow: 1px 1px 3px;
+
+        }
+
+        .yazilacak_islem {
+            border-bottom: 1px dashed var(--calc-border);
+            font-size: 15px;
+            height: 40%;
+        }
+        .sonuc {
+            height: 60%;
+            font-size: 25px;
+        }
+        .buton_alani{
+            width: 100%;
+            height: 68%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 5px;
+        }
+        .yatay_yer{
+            width: 100%;
+            height: 20%;
+            display: flex;
+            justify-content: space-between;
+        }
+        .normal_butoonlar{
+            width: 22%;
+            height: 100%;
+            border-radius: 10px;
+            background-color: var(--btn-bg);
+            border: 1px solid var(--btn-border);
+            color: var(--btn-accent-text);
+            font-size: 20px;
+            cursor: pointer;
+            transition: background-color 0.5s ease;
+        }
+        .normal_butoonlar:hover{
+            background-color: var(--btn-hover);
+        }
+        .esittir{
+            width: 35%;
+            height: 100%;
+            border-radius: 10px;
+            background-color: var(--btn-accent-bg);
+            border: 1px solid var(--btn-accent-border);
+            color: var(--btn-accent-text);
+            font-size: 25px;
+            cursor: pointer;
+            transition: background-color 0.5s ease;
+        }
+        .esittir:hover{
+            background-color: var(--btn-accent-hover);
+        }
+        .sıfır{
+            width: 35%;
+            height: 100%;
+            border-radius: 10px;
+            background-color: var(--btn-bg);
+            border: 1px solid var(--btn-border);
+            color: var(--btn-accent-text);
+            font-size: 20px;
+            cursor: pointer;
+            transition: background-color 0.5s ease;
+        }
+        .sıfır:hover{
+            background-color: var(--btn-hover);
+        }
+        .arka{
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            position: fixed;
+        }
+        .sayilar{
+            color: #39FF14;
+            position: absolute;
+            text-shadow: 
+              0 0 10px #39FF14, 
+              0 0 20px #39FF14, 
+              0 0 40px #39FF14;
+            animation: ucansayi linear 7s infinite;
+        }
+        @keyframes ucansayi{
+            0%{
+                transform: translateY(110vh);
+                opacity: 20%;
+            }
+            50%{
+                opacity: 80%;
+            }
+            100%{
+                transform: translateY(-10vh);
+                opacity: 20%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="arka" id="arkaplan"></div>
+    <div class="makine">
+        <div class="islem_kısmı">
+            <div class="yazilacak_islem" id="yazılacak"></div>
+            <div class="sonuc" id="sonuc"></div>
+        </div>
+        <div class="buton_alani">
+            <div class="yatay_yer">
+                <button class="normal_butoonlar" id="temizle">c</button>
+                <button class="normal_butoonlar" id="ayracsol">(</button>
+                <button class="normal_butoonlar" id="ayracsag">)</button>
+                <button class="normal_butoonlar" id="bol">÷</button>
+            </div>
+            <div class="yatay_yer">
+                <button class="normal_butoonlar" id="yedi">7</button>
+                <button class="normal_butoonlar" id="sekiz">8</button>
+                <button class="normal_butoonlar" id="dokuz">9</button>
+                <button class="normal_butoonlar" id="carp">x</button>
+            </div>
+            <div class="yatay_yer">
+                <button class="normal_butoonlar" id="dort">4</button>
+                <button class="normal_butoonlar" id="bes">5</button>
+                <button class="normal_butoonlar" id="altı">6</button>
+                <button class="normal_butoonlar" id="eksi">-</button>
+            </div>
+            <div class="yatay_yer">
+                <button class="normal_butoonlar" id="bir">1</button>
+                <button class="normal_butoonlar" id="iki">2</button>
+                <button class="normal_butoonlar" id="uc">3</button>
+                <button class="normal_butoonlar" id="artı">+</button>
+            </div>
+            <div class="yatay_yer">
+                <button class="sıfır" id="sifir">0</button>
+                <button class="normal_butoonlar" id="nokta">.</button>
+                <button class="esittir" id="esittir">=</button>
+
+            </div>
+
+        </div>
+
+    </div>
+    <script src="hesap.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
