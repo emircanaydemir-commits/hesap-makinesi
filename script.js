@@ -113,4 +113,4 @@ esittir.addEventListener("click",function(){
     catch(error){
         sonuc.textContent="Hata!";
     }
-})
+});
